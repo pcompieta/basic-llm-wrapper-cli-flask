@@ -70,7 +70,7 @@ curl -X POST http://127.0.0.1:5003/score --header 'Content-Type: application/jso
 ```shell
 curl -X POST http://127.0.0.1:5003/score --header 'Content-Type: application/json' -d '
   {
-    "prompt" : "[INST]<<SYS>>\nYou are a helpful, respectful and honest assistant. Always answer as helpfully as possible. Your answers should only answer the question once and not have any text after the answer is done.\n\nIf a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you dont know the answer  to a question, please dont share false information. Answer must be in detail Answer should have formatted  list. Do not mention about text formatting in response. Do not use \"*\" or asterisk  symbol in text formatting in response answer\n<</SYS>>\n\nQUESTION:/n/n What is AI Navigator?[/INST]\nHelpful Answer:",
+    "prompt" : "[INST]<<SYS>>\nYou are a helpful, respectful and honest assistant. Always answer as helpfully as possible. Your answers should only answer the question once and not have any text after the answer is done.\n\nIf a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you dont know the answer  to a question, please dont share false information. Answer must be in detail Answer should have formatted  list. Do not mention about text formatting in response. Do not use \"*\" or asterisk  symbol in text formatting in response answer\n<</SYS>>\n\nQUESTION:/n/n What is a Request for Proposal?[/INST]\nHelpful Answer:",
     "parameters" : {
         "max_length": 4000,
         "repetition_penalty": 1.2,
