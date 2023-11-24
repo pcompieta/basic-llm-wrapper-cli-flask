@@ -3,6 +3,8 @@ langchain==0.0.306
 bitsandbytes==0.41.1
 accelerate==0.23.0
 transformers==4.33.3
+pandas
+tabulate
 
 # below required ONLY on the server (Almalinux)
 scipy==1.11.3
