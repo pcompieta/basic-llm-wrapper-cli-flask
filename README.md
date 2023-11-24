@@ -52,11 +52,10 @@ Once main program is up and running, it can be invoked like below.
 
 ## Simple format
 ```shell
-curl -X POST http://127.0.0.1:5003/score --header 'Content-Type: application/json' -d '
+curl -X POST http://127.0.0.1:5000/score --header 'Content-Type: application/json' -d '
   {
     "prompt" : "How are you?",
     "parameters" : {
-        "max_length": 4000,
         "repetition_penalty": 1.2,
         "max_new_tokens": 200,
         "temperature": 0.1,

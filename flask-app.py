@@ -1,8 +1,15 @@
+import json
+
 from flask import Flask, request
 import simple_score
 
 
 app = Flask(__name__)
+
+with open('simple_config.json') as config_file:
+    configs = json.load(config_file)
+
+model_ready = simple_score.init(configs['model_path'])
 
 
 @app.route("/")
@@ -16,5 +23,5 @@ def score():
     prompt = payload['prompt']
     parameters = payload['parameters']
 
-    json_result = simple_score.process(prompt, parameters)
+    json_result = simple_score.process(model_ready["model"], model_ready["tokenizer"], prompt, parameters)
     return json_result
