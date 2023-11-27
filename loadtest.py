@@ -64,7 +64,7 @@ def multithread_test(many: int, question: str, dryrun: bool, delay: int = 0):
         for _ in range(many):
             futures.append(executor.submit(process_single, responses, question, dryrun))
             time.sleep(delay)
-        wait(futures)
+        wait(futures, return_when="FIRST_EXCEPTION")
 
     t_end = perf_counter()
     total_elapsed = t_end - t_begin
@@ -85,7 +85,7 @@ def multiprocess_test(many: int, question: str, dryrun: bool, delay: int = 0):  
         for _ in range(many):
             futures.append(executor.submit(process_single, responses, question, dryrun))
             time.sleep(delay)
-        wait(futures)
+        wait(futures, return_when="FIRST_EXCEPTION")
 
     t_end = perf_counter()
     total_elapsed = t_end - t_begin
