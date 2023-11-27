@@ -46,6 +46,7 @@ python -m flask --app ./flask-app.py run --host 0.0.0.0 --port 5003
 
 Please note this takes 1-2 minutes to load Llama libs & models into memory.
 
+
 # Score
 
 Once main program is up and running, it can be invoked like below.
@@ -78,4 +79,16 @@ curl -X POST http://127.0.0.1:5003/score --header 'Content-Type: application/jso
         "top_p": 0.95
     }
   }'
+```
+# Load test
+
+To see help on how to launch load testing, open a shell with the current VirtualEnv and execute the below:
+```shell
+python loadtest.py -h
+```
+
+Example invocations (note: dry-run does not use LLM but rather a simple routing keeping CPU actively busy)
+```shell
+python loadtest.py /path/to/model/TinyLLama-v0 --many 12 --delay 1 --dryrun --busy_cpu_sec 20
+python loadtest.py /path/to/model/TinyLLama-v0 --many 32 --question "What is the best recipe for pancakes?"
 ```
