@@ -108,10 +108,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Load test the LLM, firing many concurrent questions')
     parser.add_argument('model_path', help='the absolute path to the model folder')
     parser.add_argument('--many', dest='many', default=2, type=int, help='how many concurrent calls to be fired')
-    parser.add_argument('--delay', dest='delay', default=1, type=int, choices=range(1, 10), help='seconds of delay between calls')
+    parser.add_argument('--delay', dest='delay', default=1.0, type=float, choices=range(1, 10), help='seconds of delay between calls')
     parser.add_argument('--question', dest='question', default="what is AI Navigator?")
-    parser.add_argument('--dryrun', dest='dryrun', type=bool, default=False)
-    parser.add_argument('--busy_cpu_sec', dest='busy_cpu_sec', default=2, type=int, help='secs of compute in case of dryrun')
+    parser.add_argument('--dryrun', dest='dryrun', action='store_true')  # False when not provided
+    parser.add_argument('--busy_cpu_sec', dest='busy_cpu_sec', default=2.0, type=float, help='secs of compute in case of dryrun')
 
     args = parser.parse_args()
     print(args)
