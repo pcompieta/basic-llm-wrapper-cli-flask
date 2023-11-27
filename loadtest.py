@@ -1,23 +1,10 @@
 import argparse  # https://docs.python.org/dev/library/argparse.html
 import time
 from concurrent.futures import ProcessPoolExecutor, wait, ThreadPoolExecutor
-from multiprocessing import Pool
+import multiprocessing
 from time import perf_counter
 import datetime
 import simple_score
-
-parser = argparse.ArgumentParser(description='Load test the LLM, firing many concurrent questions')
-parser.add_argument('model_path', help='the absolute path to the model folder')
-parser.add_argument('--many', dest='many', default=2, type=int, help='how many concurrent calls to be fired')
-parser.add_argument('--delay', dest='delay', default=2, type=int, help='seconds of delay between 1 call and the next')
-parser.add_argument('--question', dest='question', default="what is AI Navigator?")
-parser.add_argument('--dryrun', dest='dryrun', type=bool, default=False)
-
-args = parser.parse_args()
-print(args)
-
-if not args.dryrun:
-    model_ready = simple_score.init(args.model_path)
 
 
 def waste_seconds():
@@ -68,12 +55,15 @@ def sequential_test(many: int, question: str, dryrun: bool):
     print_df_as_table(responses)
 
 
-def multithread_test(many: int, question: str, dryrun: bool):
+def multithread_test(many: int, question: str, dryrun: bool, delay: int = 0):
     responses = []
     t_begin = perf_counter()
 
     with ThreadPoolExecutor(max_workers=many) as executor:
-        futures = [executor.submit(process_single, responses, question, dryrun) for _ in range(many)]
+        futures = []
+        for _ in range(many):
+            futures.append(executor.submit(process_single, responses, question, dryrun))
+            time.sleep(delay)
         wait(futures)
 
     t_end = perf_counter()
@@ -86,12 +76,15 @@ def multithread_test(many: int, question: str, dryrun: bool):
     print_df_as_table(responses)
 
 
-def multiprocess_test(many: int, question: str, dryrun: bool):
+def multiprocess_test(many: int, question: str, dryrun: bool, delay: int = 0):  # NOT WORKING YET
     responses = []
     t_begin = perf_counter()
 
-    with ProcessPoolExecutor(max_workers=many) as executor:
-        futures = [executor.submit(process_single, responses, question, dryrun) for _ in range(many)]
+    futures = []
+    with ProcessPoolExecutor() as executor:
+        for _ in range(many):
+            futures.append(executor.submit(process_single, responses, question, dryrun))
+            time.sleep(delay)
         wait(futures)
 
     t_end = perf_counter()
@@ -111,10 +104,28 @@ def print_df_as_table(responses):
     print(tabulate(df, headers=["No", "elapsed (sec)", "start_time", "end_time"]))
 
 
-print("-----------------------------------------------------------------")
-sequential_test(args.many, args.question, args.dryrun)
-print("-----------------------------------------------------------------")
-multithread_test(args.many, args.question, args.dryrun)
-print("-----------------------------------------------------------------")
-# multiprocess_test(args.many, args.question, args.dryrun)
-# print("-----------------------------------------------------------------")
+if __name__ == '__main__':
+    multiprocessing.freeze_support()
+    parser = argparse.ArgumentParser(description='Load test the LLM, firing many concurrent questions')
+    parser.add_argument('model_path', help='the absolute path to the model folder')
+    parser.add_argument('--many', dest='many', default=2, type=int, help='how many concurrent calls to be fired')
+    parser.add_argument('--delay', dest='delay', default=1, type=int, choices=range(1, 10), help='seconds of delay between calls')
+    parser.add_argument('--question', dest='question', default="what is AI Navigator?")
+    parser.add_argument('--dryrun', dest='dryrun', type=bool, default=False)
+
+    args = parser.parse_args()
+    print(args)
+
+    if not args.dryrun:
+        model_ready = simple_score.init(args.model_path)
+
+    print("=======================================================================")
+    sequential_test(args.many, args.question, args.dryrun)
+    print("=======================================================================")
+    multithread_test(args.many, args.question, args.dryrun, 0)
+    print("=======================================================================")
+    multithread_test(args.many, args.question, args.dryrun, args.delay)
+    # print("=======================================================================")
+    # multiprocess_test(args.many, args.question, args.dryrun, 0)
+    # print("=======================================================================")
+    # multiprocess_test(args.many, args.question, args.dryrun, args.delay)
