@@ -32,13 +32,13 @@ def waste_seconds():
         hasher.update(inner_data)
         return hasher.hexdigest()
 
-    data = os.urandom(120 * 1024 * 1024)  # Generate a large block of data: 1 MB
+    data = os.urandom(250 * 1024 * 1024)  # Generate a large block of data: 250 MB of data, approx 2s to be hashed
     hash_function(data)
 
 
 def process_single(responses, question: str, dryrun: bool):
     t_start = perf_counter()
-    start_time = datetime.datetime.now()
+    start_time = datetime.datetime.now().isoformat(sep=" ", timespec='milliseconds')
 
     if not dryrun:
         json_result = simple_score.process(model_ready["model"], model_ready["tokenizer"], question)
@@ -47,7 +47,7 @@ def process_single(responses, question: str, dryrun: bool):
         waste_seconds()
 
     t_stop = perf_counter()
-    end_time = datetime.datetime.now()
+    end_time = datetime.datetime.now().isoformat(sep=" ", timespec='milliseconds')
     responses.append({"elapsed": t_stop - t_start, "start_time": start_time, "end_time": end_time})
 
 
@@ -59,8 +59,12 @@ def sequential_test(many: int, question: str, dryrun: bool):
         process_single(responses, question, dryrun)
 
     t_end = perf_counter()
-    elapsed = t_end-t_begin
-    print(f"Sequential test, total elapsed: {elapsed}")
+    total_elapsed = t_end - t_begin
+    throughput = many / total_elapsed
+    print(f"""SEQUENTIAL TEST
+          total_elapsed={total_elapsed:.1f}
+          throughput={throughput:.1f}
+          """)
     print_df_as_table(responses)
 
 
@@ -73,8 +77,12 @@ def multithread_test(many: int, question: str, dryrun: bool):
         wait(futures)
 
     t_end = perf_counter()
-    elapsed = t_end - t_begin
-    print(f"Thread-pool test, total elapsed: {elapsed}")
+    total_elapsed = t_end - t_begin
+    throughput = many / total_elapsed
+    print(f"""THREADPOOL TEST
+          total_elapsed={total_elapsed:.1f}
+          throughput={throughput:.1f}
+          """)
     print_df_as_table(responses)
 
 
@@ -87,8 +95,12 @@ def multiprocess_test(many: int, question: str, dryrun: bool):
         wait(futures)
 
     t_end = perf_counter()
-    elapsed = t_end - t_begin
-    print(f"Process-pool test, total elapsed: {elapsed}")
+    total_elapsed = t_end - t_begin
+    throughput = many / total_elapsed
+    print(f"""PROCESSPOOL TEST
+          total_elapsed={total_elapsed:.1f}
+          throughput={throughput:.1f}
+          """)
     print_df_as_table(responses)
 
 
@@ -105,4 +117,4 @@ print("-----------------------------------------------------------------")
 multithread_test(args.many, args.question, args.dryrun)
 print("-----------------------------------------------------------------")
 # multiprocess_test(args.many, args.question, args.dryrun)
-print("-----------------------------------------------------------------")
+# print("-----------------------------------------------------------------")
