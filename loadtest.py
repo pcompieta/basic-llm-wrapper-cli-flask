@@ -59,7 +59,7 @@ def sequential_test(many: int, question: str, dryrun: bool, busy_cpu_sec: float)
     t_end = perf_counter()
     total_elapsed = t_end - t_begin
     throughput = many / total_elapsed
-    print(f"""SEQUENTIAL TEST
+    print(f"""SEQUENTIAL TEST ({many} jobs)
           total_elapsed={total_elapsed:.1f}s
           throughput={throughput:.2f} job/s
           """)
@@ -80,7 +80,7 @@ def multithread_test(many: int, question: str, dryrun: bool, delay: int, busy_cp
     t_end = perf_counter()
     total_elapsed = t_end - t_begin
     throughput = many / total_elapsed
-    print(f"""THREADPOOL TEST
+    print(f"""THREADPOOL TEST ({many} jobs)
           total_elapsed = {total_elapsed:.1f}s
           throughput = {throughput:.2f} job/s
           delay = {delay:.1f}s
@@ -102,7 +102,7 @@ def multiprocess_test(many: int, question: str, dryrun: bool, delay: int, busy_c
     t_end = perf_counter()
     total_elapsed = t_end - t_begin
     throughput = many / total_elapsed
-    print(f"""PROCESSPOOL TEST
+    print(f"""PROCESSPOOL TEST ({many} jobs)
           total_elapsed={total_elapsed:.1f}
           throughput={throughput:.1f}
           """)

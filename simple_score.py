@@ -16,6 +16,8 @@ def init(model_uri: str) -> dict:
     tokenizer.pad_token = tokenizer.eos_token
     tokenizer.padding_side = "right"
 
+    process(model, tokenizer, "this is a warm up call: are you ready to process prompts?", default_parameters)
+
     return {"model": model, "tokenizer": tokenizer}
 
 
