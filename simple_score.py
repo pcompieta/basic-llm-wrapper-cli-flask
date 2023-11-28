@@ -23,12 +23,8 @@ default_parameters = {
         "max_length": 4000,
         "repetition_penalty": 1.2,
         "max_new_tokens": 200,
-
-        # "temperature": 0.1, <-- UserWarning: `do_sample` is set to `False`. However, `temperature` is set to
-        # `0.1` -- this flag is only used in sample-based generation modes. You should set `do_sample=True`
-        # or unset `temperature`.
-        # "top_p": 0.95, <-- UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.95` -- this
-        # flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+        "temperature": 0.1,
+        "top_p": 0.95,
     }
 
 
@@ -46,11 +42,12 @@ def process(model, tokenizer, prompt: str, parameters: dict = None):
                                  max_new_tokens=parameters['max_new_tokens'],  # wins over max_length TODO what default?
                                  # max_length=parameters['max_length'],  # max length of output, default=4096
                                  return_full_text=False,  # to not repeat the question, default=True
+                                 repetition_penalty=parameters['repetition_penalty'],
+                                 # TODO check whether honoured or not; and, what's the default ?
                                  # num_return_sequences=1,  # TODO what's this for
                                  # top_k=10,  # default=10
-                                 top_p=parameters['top_p'],  # default=0.9
-                                 temperature=parameters['temperature'],  # default=0
-                                 repetition_penalty=parameters['repetition_penalty'],  # TODO check whether honoured or not; and, what's the default ?
+                                 # top_p=parameters['top_p'],  # default=0.9 TODO UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.95` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+                                 # temperature=parameters['temperature'],  # default=0 TODO UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.1` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
                                  )
 
     json_result = pipe(prompt)
