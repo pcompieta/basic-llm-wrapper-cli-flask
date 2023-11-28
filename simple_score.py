@@ -23,8 +23,12 @@ default_parameters = {
         "max_length": 4000,
         "repetition_penalty": 1.2,
         "max_new_tokens": 200,
-        "temperature": 0.1,
-        "top_p": 0.95
+
+        # "temperature": 0.1, <-- UserWarning: `do_sample` is set to `False`. However, `temperature` is set to
+        # `0.1` -- this flag is only used in sample-based generation modes. You should set `do_sample=True`
+        # or unset `temperature`.
+        # "top_p": 0.95, <-- UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.95` -- this
+        # flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
     }
 
 

@@ -26,8 +26,7 @@ def process_single(responses, question: str, dryrun: bool, busy_cpu_sec: float):
     start_time = datetime.datetime.now().isoformat(sep=" ", timespec='milliseconds')
 
     if not dryrun:
-        json_result = simple_score.process(model_ready["model"], model_ready["tokenizer"], question)
-        print(json_result)
+        simple_score.process(model_ready["model"], model_ready["tokenizer"], question)
     else:
         keep_cpu_busy(busy_cpu_sec)
 
@@ -48,7 +47,7 @@ def sequential_test(many: int, question: str, dryrun: bool, busy_cpu_sec: float)
     throughput = many / total_elapsed
     print(f"""SEQUENTIAL TEST
           total_elapsed={total_elapsed:.1f}s
-          throughput={throughput:.1f} job/s
+          throughput={throughput:.2f} job/s
           """)
     print_df_as_table(responses)
 
@@ -69,7 +68,7 @@ def multithread_test(many: int, question: str, dryrun: bool, delay: int, busy_cp
     throughput = many / total_elapsed
     print(f"""THREADPOOL TEST
           total_elapsed = {total_elapsed:.1f}s
-          throughput = {throughput:.1f} job/s
+          throughput = {throughput:.2f} job/s
           delay = {delay:.1f}s
           """)
     print_df_as_table(responses)
